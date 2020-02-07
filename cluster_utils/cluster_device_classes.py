@@ -1,0 +1,90 @@
+import json
+from os import listdir
+import file_listeners
+import requests
+
+
+class Device:
+    def __init__(self, ipaddr, hwid, performance, port):
+        self.performance = performance
+        self.ipaddr = ipaddr
+        self.hwid = hwid
+        self.port = port
+
+    @staticmethod
+    def performance_list(devices):
+        ret = []
+        for dev in devices:
+            ret.append(dev.performance)
+        ret.sort()
+        return ret
+
+    def dispatch_job(self, job_id, copy_path):
+        data = {
+            "job_id": job_id,
+            "copy_path": copy_path
+        }
+        ret = requests.post(f'//:{self.ipaddr}', data=data).content.decode("utf-8")
+        if ret == "job_added_to_que":
+            return True
+        else:
+            return False
+
+
+class Cluster:
+    def __init__(self):
+        self.devices = self.sort_devices_by_perf(self.create_devices_list())
+        self.file_listener = file_listeners.FileListener()
+
+    @staticmethod
+    def sort_devices_by_perf(devices):
+        sorted_list = []
+        for device in devices:
+            if len(sorted_list) == 0:
+                sorted_list.append(device)
+                continue
+            index = 0
+            for sub_device in sorted_list:
+                if device.performance > sub_device.performance:
+                    index += 1
+                else:
+                    break
+            sorted_list.insert(index, device)
+        return sorted_list
+
+    def divide_alg(self, totalframes):
+        perflist = Device.performance_list(self.devices)
+        base_divide = []
+        base = totalframes // sum(perflist)
+        for val in perflist:
+            base_divide.append(val * base)
+        rest1 = totalframes - sum(base_divide)
+
+        nth_loop = 0
+        counter = 0
+        for fake_index in range(rest1):
+            actual_index = ((fake_index * -1) - 1) + (nth_loop * len(base_divide))
+            base_divide[actual_index] += 1
+            counter += 1
+            if counter == len(base_divide):
+                counter = 0
+                nth_loop += 1
+        return base_divide
+
+    @staticmethod
+    def get_device_files():
+        read_list = listdir('devices/')
+        device_list = []
+        for obj in read_list:
+            if obj.split('.')[-1] == "json":
+                device_list.append(obj)
+        return device_list
+
+    def create_devices_list(self):
+        name_list = self.get_device_files()
+        device_list = []
+        for name in name_list:
+            with open(f'devices/{name}', 'r') as f:
+                jp = json.load(f)
+                device_list.append(Device(jp['ip'], jp['hwid'], jp['performance'], jp['port']))
+        return device_list

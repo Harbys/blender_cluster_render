@@ -1,0 +1,20 @@
+<!doctype html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">
+</head>
+
+<body>
+    <div class="top_bar">
+        <ul>
+            <li>Login</li>
+        </ul>
+    </div>
+    <div class="login_box">
+        <form action="/login" method="post" class="login_form">
+            <input type="text" name="login" class="login_input"><br>
+            <input type="password" name="password" class="login_input"><br>
+            <input type="submit" class="">
+            <label><input type="checkbox" name="auto_login" class="login_checkbox">auto login?</label>
+        </form>
+    </div>
+</body>
