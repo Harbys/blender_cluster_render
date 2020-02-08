@@ -27,5 +27,5 @@ def login_page():
 
 
 def run():
-    cluster = cluster_utils.Cluster()
+    cluster = cluster_utils.Cluster(config)
     app.run(host='0.0.0.0', port=2452, threaded=True)

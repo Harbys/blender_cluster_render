@@ -2,6 +2,11 @@ import json
 from os import listdir
 import file_listeners
 import requests
+import work_dispatcher
+from blender_render_info import get_frames_info
+from unzipper import unzip
+import threading
+import time
 
 
 class Device:
@@ -19,12 +24,15 @@ class Device:
         ret.sort()
         return ret
 
-    def dispatch_job(self, job_id, copy_path):
+    def dispatch_job(self, job_id, fstart, fend, file_name):
+        pass
         data = {
             "job_id": job_id,
-            "copy_path": copy_path
+            "fstart": fstart,
+            "fend": fend,
+            "file_name": file_name
         }
-        ret = requests.post(f'//:{self.ipaddr}', data=data).content.decode("utf-8")
+        ret = requests.post(f'http://{self.ipaddr}:2540/add_to_work_que', data=data).content.decode("utf-8")
         if ret == "job_added_to_que":
             return True
         else:
@@ -32,9 +40,12 @@ class Device:
 
 
 class Cluster:
-    def __init__(self):
+    def __init__(self, config):
         self.devices = self.sort_devices_by_perf(self.create_devices_list())
-        self.file_listener = file_listeners.FileListener()
+        self.queue = work_dispatcher.Que()
+        self.file_listener = file_listeners.FileListener(self.queue.add_job)
+        self.config = config
+        self.que_listener_thread = threading.Thread(target=self.que_listener).start()
 
     @staticmethod
     def sort_devices_by_perf(devices):
@@ -52,6 +63,34 @@ class Cluster:
             sorted_list.insert(index, device)
         return sorted_list
 
+    def que_listener(self):
+        while True:
+            for job in self.queue.get_jobs():
+                if job.status == 'waiting':
+                    unzip(self.config.listen_path+job.file_name, self.config.tmp_path+job.job_id)
+                    blend_file_path = f'{self.config.tmp_path+job.job_id}/{self.find_blender_file(self.config.tmp_path+job.job_id)}'
+                    self.dispatch_work(blend_file_path, job.job_id, job.file_name)
+                    job.add_to_waitlist(self.devices)
+                    job.status = 'pending'
+                    print(job)
+            time.sleep(1)
+
+    def dispatch_work(self, blend_file, job_id, file_name):
+        ftsart, fstop, total = get_frames_info(blend_file)
+        divided_array = self.divide_alg(total)
+        frame = ftsart
+        for device in self.devices:
+            device.dispatch_job(job_id, frame, frame+divided_array[self.devices.index(device)] - 1, file_name)
+            frame += frame+divided_array[self.devices.index(device)] - 1
+
+    @staticmethod
+    def find_blender_file(path):
+        listed = listdir(path)
+        for obj in listed:
+            if obj.split('.')[-1] == "blend":
+                return obj
+        return None
+
     def divide_alg(self, totalframes):
         perflist = Device.performance_list(self.devices)
         base_divide = []
@@ -59,7 +98,6 @@ class Cluster:
         for val in perflist:
             base_divide.append(val * base)
         rest1 = totalframes - sum(base_divide)
-
         nth_loop = 0
         counter = 0
         for fake_index in range(rest1):

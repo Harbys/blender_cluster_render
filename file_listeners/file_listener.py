@@ -1,16 +1,18 @@
 import os
 import time
-from subprocess import run as run_command
 import threading
+from work_dispatcher import Job
+import uuid
 
 
 class FileListener:
-    def __init__(self):
+    def __init__(self, addjob):
         self.savepath = '/Users/harbys/Desktop/'
         self.listenpath = '/Users/harbys/Desktop/to_render/'
         self.last_known_files = os.listdir(self.listenpath)
         self.fthread = threading.Thread(target=self.check)
         self.fthread.start()
+        self.que = addjob
 
     def get_change(self):
         files = os.listdir(self.listenpath)
@@ -33,7 +35,5 @@ class FileListener:
             diff = self.get_change()
             if diff is not None:
                 for obj in diff:
-                    code = run_command(
-                        ["/Applications/Blender.app/Contents/MacOS/Blender", "-b", self.listenpath + obj, "-o",
-                         self.savepath + f'render_{obj.split(".")[0]}/', '-a']).returncode
-            time.sleep(5)
+                    self.que(Job(uuid.uuid4().hex, obj))
+            time.sleep(1)
