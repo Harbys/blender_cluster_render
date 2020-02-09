@@ -7,6 +7,7 @@ from blender_render_info import get_frames_info
 from unzipper import unzip
 import threading
 import time
+import json
 
 
 class Device:
@@ -32,7 +33,8 @@ class Device:
             "fend": fend,
             "file_name": file_name
         }
-        ret = requests.post(f'http://{self.ipaddr}:2540/add_to_work_que', data=data).content.decode("utf-8")
+        json_data = json.dumps(data)
+        ret = requests.post(f'http://{self.ipaddr}:2540/add_to_work_que', json=json_data).content.decode("utf-8")
         if ret == "job_added_to_que":
             return True
         else:
