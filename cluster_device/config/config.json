@@ -1,4 +1,7 @@
 {
   "port": 2540,
-  "blender_command": "blender"
+  "blender_command": "/Applications/Blender.app/Contents/MacOS/Blender",
+  "hwid": "localhost",
+  "tmp_path": "/Users/harbys/Desktop/bcr/",
+  "network_mount": "/Users/harbys/Desktop/to_render/"
 }

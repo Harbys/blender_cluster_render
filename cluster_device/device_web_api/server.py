@@ -1,6 +1,6 @@
 import flask
 import logging
-from device_utils import Config, Job, Que
+from device_utils import Config, Job, Que, Executor
 import json
 
 
@@ -9,6 +9,7 @@ log = logging.getLogger('werkzeug')
 log.disabled = True
 config = Config()
 que = Que()
+executor = Executor(que, config)
 
 
 @app.after_request
@@ -20,9 +21,10 @@ def set_server_name(response):
 @app.route('/add_to_work_que', methods=["POST"])
 def add_job():
     data = json.loads(flask.request.json)
-    que.add_job(Job(data['job_id'], data["file_name"], data["fstart"], data["fend"]))
-    print(que)
-    return ''
+    que.add_job(Job(data['job_id'], data["file_name"], data["fstart"], data["fend"], data["blend_file"]))
+    return flask.make_response({
+        "action": "job_added"
+    })
 
 
 def run():

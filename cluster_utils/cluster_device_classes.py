@@ -1,4 +1,3 @@
-import json
 from os import listdir
 import file_listeners
 import requests
@@ -25,17 +24,18 @@ class Device:
         ret.sort()
         return ret
 
-    def dispatch_job(self, job_id, fstart, fend, file_name):
+    def dispatch_job(self, job_id, fstart, fend, file_name, blend_file):
         pass
         data = {
             "job_id": job_id,
             "fstart": fstart,
             "fend": fend,
-            "file_name": file_name
+            "file_name": file_name,
+            "blend_file": blend_file
         }
         json_data = json.dumps(data)
-        ret = requests.post(f'http://{self.ipaddr}:2540/add_to_work_que', json=json_data).content.decode("utf-8")
-        if ret == "job_added_to_que":
+        ret = json.loads(requests.post(f'http://{self.ipaddr}:2540/add_to_work_que', json=json_data).content.decode("utf-8"))
+        if ret["action"] == "job_added":
             return True
         else:
             return False
@@ -71,18 +71,18 @@ class Cluster:
                 if job.status == 'waiting':
                     unzip(self.config.listen_path+job.file_name, self.config.tmp_path+job.job_id)
                     blend_file_path = f'{self.config.tmp_path+job.job_id}/{self.find_blender_file(self.config.tmp_path+job.job_id)}'
-                    self.dispatch_work(blend_file_path, job.job_id, job.file_name)
+                    self.dispatch_work(blend_file_path, job.job_id, job.file_name, self.find_blender_file(self.config.tmp_path+job.job_id))
                     job.add_to_waitlist(self.devices)
                     job.status = 'pending'
                     print(job)
             time.sleep(1)
 
-    def dispatch_work(self, blend_file, job_id, file_name):
+    def dispatch_work(self, blend_file, job_id, file_name, blend_file_name):
         ftsart, fstop, total = get_frames_info(blend_file)
         divided_array = self.divide_alg(total)
         frame = ftsart
         for device in self.devices:
-            device.dispatch_job(job_id, frame, frame+divided_array[self.devices.index(device)] - 1, file_name)
+            device.dispatch_job(job_id, frame, frame+divided_array[self.devices.index(device)] - 1, file_name, blend_file_name)
             frame += frame+divided_array[self.devices.index(device)] - 1
 
     @staticmethod

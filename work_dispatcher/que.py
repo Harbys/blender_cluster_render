@@ -8,7 +8,7 @@ class Job:
 
     def add_to_waitlist(self, device_list):
         for device in device_list:
-            self.waiting_for.append(device.ipaddr)
+            self.waiting_for.append(device.hwid)
 
     def __str__(self):
         return f"job_id: {self.job_id}, file_name: {self.file_name}, status: {self.status}, waiting_for: {self.waiting_for}"

@@ -13,3 +13,11 @@ class Config:
     @property
     def blender(self):
         return self.config["blender_command"]
+
+    @property
+    def tmp_path(self):
+        return self.config["tmp_path"]
+
+    @property
+    def nmnt(self):
+        return self.config["network_mount"]
