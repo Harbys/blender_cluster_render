@@ -1,7 +1,7 @@
-# [8] Enable CUDA and activate GPU
-# code from https://developer.blender.org/T54099
 import bpy
+
 scene = bpy.context.scene
+scene.render.engine = 'CYCLES'
 scene.cycles.device = 'GPU'
 
 prefs = bpy.context.preferences
