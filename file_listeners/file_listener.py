@@ -6,9 +6,8 @@ import uuid
 
 
 class FileListener:
-    def __init__(self, addjob):
-        self.savepath = '/Users/harbys/Desktop/'
-        self.listenpath = '/Users/harbys/Desktop/to_render/'
+    def __init__(self, addjob, listen_path):
+        self.listenpath = listen_path
         self.last_known_files = os.listdir(self.listenpath)
         self.fthread = threading.Thread(target=self.check)
         self.fthread.start()

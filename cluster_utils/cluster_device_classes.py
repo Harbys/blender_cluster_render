@@ -46,7 +46,7 @@ class Cluster:
     def __init__(self, config):
         self.devices = self.sort_devices_by_perf(self.create_devices_list())
         self.queue = work_dispatcher.Que()
-        self.file_listener = file_listeners.FileListener(self.queue.add_job)
+        self.file_listener = file_listeners.FileListener(self.queue.add_job, config.listen_path)
         self.config = config
         self.que_listener_thread = threading.Thread(target=self.que_listener).start()
 
