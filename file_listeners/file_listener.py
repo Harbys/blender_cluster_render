@@ -20,7 +20,7 @@ class FileListener:
             self.last_known_files = files
             ret = []
             for obj in difflist:
-                if obj.split('.')[-1] == "zip":
+                if obj.split('.')[-1] == "zip" and obj[0] != '.':
                     ret.append(obj)
             if len(ret) > 0:
                 return ret
