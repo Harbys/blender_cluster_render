@@ -71,6 +71,7 @@ class Cluster:
             for job in self.queue.get_jobs():
                 if job.status == 'waiting':
                     unzip(self.config.listen_path+job.file_name, self.config.tmp_path+job.job_id)
+                    print(self.config.listen_path+job.file_name)
                     blend_file_path = f'{self.config.tmp_path+job.job_id}/{self.find_blender_file(self.config.tmp_path+job.job_id)}'
                     self.dispatch_work(blend_file_path, job.job_id, job.file_name, self.find_blender_file(self.config.tmp_path+job.job_id))
                     job.add_to_waitlist(self.devices)
