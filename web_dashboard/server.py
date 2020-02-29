@@ -6,6 +6,7 @@ app = flask.Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.disabled = True
 config = cluster_utils.Config()
+cluster = cluster_utils.Cluster(config)
 
 
 @app.after_request
@@ -26,6 +27,12 @@ def login_page():
     return 'login'
 
 
+@app.route("/dev_api", methods=["POST"])
+def dev_api():
+    data = flask.request.form
+    cluster.delete_waiting_for(data["job"], data["hwid"])
+    return "done"
+
+
 def run():
-    cluster = cluster_utils.Cluster(config)
     app.run(host='0.0.0.0', port=2452, threaded=True)

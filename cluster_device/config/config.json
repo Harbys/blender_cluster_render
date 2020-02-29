@@ -3,5 +3,7 @@
   "blender_command": "/Applications/Blender.app/Contents/MacOS/Blender",
   "hwid": "localhost",
   "tmp_path": "/Users/harbys/Desktop/bcr/",
-  "network_mount": "/Users/harbys/Desktop/to_render/"
+  "network_mount": "/Users/harbys/Desktop/to_render/",
+  "server_address": "localhost",
+  "server_port": 2452
 }

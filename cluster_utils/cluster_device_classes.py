@@ -7,6 +7,7 @@ from unzipper import unzip
 import threading
 import time
 import json
+import shutil
 
 
 class Device:
@@ -128,3 +129,9 @@ class Cluster:
                 jp = json.load(f)
                 device_list.append(Device(jp['ip'], jp['hwid'], jp['performance'], jp['port']))
         return device_list
+
+    def delete_waiting_for(self, job_id, hwid):
+        self.queue.del_from_waiting(job_id, hwid)
+        empty = self.queue.get_empty()
+        for empty_job_id in empty:
+            shutil.rmtree(f"{self.config.tmp_path}{empty_job_id}")

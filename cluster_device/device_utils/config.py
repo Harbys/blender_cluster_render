@@ -21,3 +21,15 @@ class Config:
     @property
     def nmnt(self):
         return self.config["network_mount"]
+
+    @property
+    def server_address(self):
+        return self.config["server_address"]
+
+    @property
+    def server_port(self):
+        return str(self.config["server_port"])
+
+    @property
+    def hwid(self):
+        return self.config["hwid"]
