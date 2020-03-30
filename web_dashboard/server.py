@@ -1,12 +1,15 @@
 import flask
 import logging
 import cluster_utils
+import login_manager
 
 app = flask.Flask(__name__)
 log = logging.getLogger('werkzeug')
 log.disabled = True
 config = cluster_utils.Config()
 cluster = cluster_utils.Cluster(config)
+with open("web_dashboard/user_db/users.json") as userfile:
+    lm = login_manager.LoginManager(userfile)
 
 
 @app.after_request
@@ -24,7 +27,14 @@ def index():
 def login_page():
     if flask.request.method == "GET":
         return flask.redirect("/")
-    return 'login'
+    if lm.verify(flask.request.form["login"], flask.request.form["password"]):
+        resp = flask.make_response(flask.redirect("/dashboard"))
+        token = lm.make_token()
+        lm.login(flask.request.form["login"], token)
+        resp.set_cookie('sessionid', token)
+        return resp
+    else:
+        return 'wrong creds'
 
 
 @app.route("/dev_api", methods=["POST"])
