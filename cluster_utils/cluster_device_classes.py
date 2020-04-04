@@ -135,3 +135,9 @@ class Cluster:
         empty = self.queue.get_empty()
         for empty_job_id in empty:
             shutil.rmtree(f"{self.config.tmp_path}{empty_job_id}")
+
+    def find_device_by_hwid(self, hwid):
+        for device in self.devices:
+            if device.hwid == hwid:
+                return device
+        raise KeyError

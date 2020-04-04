@@ -12,6 +12,10 @@
         <a>Login</a>
     </div>
     <div class="login_box">
+        <div class="wrong_creds" id="credbox">
+            <a id="close" class="close_button">x</a>
+            <span style="margin-top: 10px; display: inline-block;">Wrong Credentials</span>
+        </div>
         <form action="/login" method="post" class="login_form">
             <label>
                 <input type="text" name="login" class="login_input" placeholder="Login">
@@ -24,3 +28,8 @@
         </form>
     </div>
 </body>
+<!--    <script src={{ url_for('static',filename='js/jquery-3.4.1.min.js') }}></script>-->
+<script src="../static/js/jquery-3.4.1.min.js"></script>
+<!--    <script src={{ url_for('static',filename='js/index.js') }}></script>-->
+<script src="../static/js/index.js"></script>
+
