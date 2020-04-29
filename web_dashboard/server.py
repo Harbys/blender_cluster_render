@@ -90,9 +90,29 @@ def device(device_id):
 
     try:
         dev = cluster.find_device_by_hwid(device_id)
-        return str(dev.port)
+        dev = {
+            "hwid": dev.hwid,
+            "ip_addr": dev.ipaddr,
+            "port": dev.port,
+            "performance": dev.performance
+        }
+        return flask.render_template("device.html", device=dev)
     except KeyError:
-        return "No such device"
+        return flask.redirect("/dashboard")
+
+
+@app.route('/edit_device', methods=["POST"])
+def edit_device():
+    try:
+        token = flask.request.cookies["sessionid"]
+        if not lm.is_logged_in(token):
+            return "Not authenticated"
+    except KeyError:
+        return "Not authenticated"
+
+    data = flask.request.form
+    cluster.edit_device(data)
+    return "Success"
 
 
 def run():

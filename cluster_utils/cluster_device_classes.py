@@ -11,11 +11,25 @@ import shutil
 
 
 class Device:
-    def __init__(self, ipaddr, hwid, performance, port):
+    def __init__(self, ipaddr, hwid, performance, port, filename):
         self.performance = performance
         self.ipaddr = ipaddr
         self.hwid = hwid
         self.port = port
+        self.filename = filename
+
+    def __str__(self):
+        return self.hwid
+
+    def save(self):
+        data = {
+            "ip": self.ipaddr,
+            "hwid": self.hwid,
+            "performance": self.performance,
+            "port": self.port
+        }
+        with open(f"devices/{self.filename}", "w") as self_datafile:
+            json.dump(data, self_datafile, indent=2)
 
     @staticmethod
     def performance_list(devices):
@@ -127,7 +141,7 @@ class Cluster:
         for name in name_list:
             with open(f'devices/{name}', 'r') as f:
                 jp = json.load(f)
-                device_list.append(Device(jp['ip'], jp['hwid'], jp['performance'], jp['port']))
+                device_list.append(Device(jp['ip'], jp['hwid'], jp['performance'], jp['port'], name))
         return device_list
 
     def delete_waiting_for(self, job_id, hwid):
@@ -141,3 +155,20 @@ class Cluster:
             if device.hwid == hwid:
                 return device
         raise KeyError
+
+    def edit_device(self, data):
+        x = 0
+        do = False
+        for device in self.devices:
+            if device.hwid == data["hwid_old"]:
+                do = True
+                break
+            else:
+                x += 1
+
+        if do:
+            self.devices[x].hwid = data["hwid"]
+            self.devices[x].ipaddr = data["ip_addr"]
+            self.devices[x].performance = data["performance"]
+            self.devices[x].port = data["port"]
+            self.devices[x].save()
