@@ -172,3 +172,5 @@ class Cluster:
             self.devices[x].performance = data["performance"]
             self.devices[x].port = data["port"]
             self.devices[x].save()
+
+            self.devices = self.sort_devices_by_perf(self.devices)

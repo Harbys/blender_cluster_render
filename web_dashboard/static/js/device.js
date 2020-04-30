@@ -16,13 +16,16 @@ document.getElementById("save_button").addEventListener("click", function () {
         "port": Number(document.getElementById("port").value),
         "performance": Number(document.getElementById("performance").value)
     };
-    $.post("/edit_device", data)
-        .done(function () {
-            if (data["hwid"] !== device.hwid){
-                document.location.href = `/device/${data["hwid"]}`
-            }
-        });
 
+    if (data["hwid"] !== device["hwid"] || data["ip_addr"] !== device["ip_addr"] || data["performance"] !== Number(device["performance"]) || data["port"] !== Number(device["port"])){
+
+        $.post("/edit_device", data)
+            .done(function () {
+                if (data["hwid"] !== device.hwid){
+                    document.location.href = `/device/${data["hwid"]}`
+                }
+            });
+    }
 
     document.getElementById("hwid").disabled = true;
     document.getElementById("ip_addr").disabled = true;

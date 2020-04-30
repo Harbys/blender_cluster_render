@@ -26,3 +26,15 @@ body{
 .form{
     text-align: right;
 }
+
+.back_button{
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background-image: url("../icons/back_arrow.png");
+    background-size: cover;
+}
+
+.btn{
+    display: inline-block;
+}

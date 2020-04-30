@@ -13,26 +13,29 @@
 </div>
 
 <div class="dev_container" id="dev_container">
-    <button id="edit_button">Edit</button>
-    <button id="save_button" style="display: none">Save</button>
+    <div class="edit_space">
+        <a class="back_button" href="/dashboard"></a>
+        <button class="btn" id="edit_button">Edit</button>
+        <button class="btn" id="save_button" style="display: none">Save</button>
 
-    <button id="del_button" style="right: 0;">Delete</button>
+        <button id="del_button" style="right: 0;">Delete</button>
 
-    <form method="post" action="/edit_device" class="form" id="form">
+        <form method="post" action="/edit_device" class="form" id="form">
 
-        <label for="hwid">hwid: </label>
-        <input id="hwid" type="text" disabled="disabled" name="hwid" value=""><br>
+            <label for="hwid">hwid: </label>
+            <input id="hwid" type="text" disabled="disabled" name="hwid" value=""><br>
 
-        <label for="ip_addr">IP Address: </label>
-        <input id="ip_addr" type="text" disabled="disabled" name="ip_addr" value=""><br>
+            <label for="ip_addr">IP Address: </label>
+            <input id="ip_addr" type="text" disabled="disabled" name="ip_addr" value=""><br>
 
-        <label for="port">Port: </label>
-        <input id="port" type="text" disabled="disabled" name="port" value=""><br>
+            <label for="port">Port: </label>
+            <input id="port" type="text" disabled="disabled" name="port" value=""><br>
 
-        <label for="performance">Performance: </label>
-        <input id="performance" type="text" disabled="disabled" name="Performance" value=""><br>
+            <label for="performance">Performance: </label>
+            <input id="performance" type="text" disabled="disabled" name="Performance" value=""><br>
 
-    </form>
+        </form>
+    </div>
 </div>
 
 </body>
