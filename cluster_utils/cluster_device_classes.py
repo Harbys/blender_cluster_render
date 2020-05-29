@@ -169,7 +169,7 @@ class Cluster:
         if do:
             self.devices[x].hwid = data["hwid"]
             self.devices[x].ipaddr = data["ip_addr"]
-            self.devices[x].performance = data["performance"]
+            self.devices[x].performance = int(data["performance"])
             self.devices[x].port = data["port"]
             self.devices[x].save()
 
