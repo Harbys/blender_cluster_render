@@ -1,5 +1,5 @@
 import web_dashboard
 
-
-"""CLI to be added below here"""
+# Run the main dashboard, which contains all other components
 web_dashboard.run()
+# CLI TO BE ADDED BELOW
