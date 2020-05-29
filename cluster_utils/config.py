@@ -1,12 +1,10 @@
 import json
 
 
+# config class to get basic data to and from a json file
 class Config:
-    def __init__(self, override_path=None):
-        if override_path is None:
-            self.path = 'configs/cluster_main.json'
-        else:
-            self.path = override_path
+    def __init__(self, override_path='configs/cluster_main.json'):
+        self.path = override_path
         with open(self.path, 'r') as fstream:
             self.json_obj = json.load(fstream)
 

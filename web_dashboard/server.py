@@ -78,6 +78,7 @@ def dashboard():
         return flask.redirect("/")
 
 
+# returns json with all devices
 @app.route("/get_devices")
 def get_devices():
     try:
@@ -97,6 +98,7 @@ def get_devices():
     return devices
 
 
+# returns site with device info
 @app.route('/device/<device_id>')
 def device(device_id):
     try:
@@ -107,6 +109,7 @@ def device(device_id):
         return "Not authenticated"
 
     try:
+        # pass device to template
         dev = cluster.find_device_by_hwid(device_id)
         dev = {
             "hwid": dev.hwid,
@@ -119,6 +122,7 @@ def device(device_id):
         return flask.redirect("/dashboard")
 
 
+# expects form to edit device
 @app.route('/edit_device', methods=["POST"])
 def edit_device():
     try:

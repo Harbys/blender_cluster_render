@@ -1,3 +1,5 @@
+//i know jquery is outdated, but it fits this application
+
 document.getElementById("edit_button").addEventListener("click", function () {
     document.getElementById("hwid").disabled = false;
     document.getElementById("ip_addr").disabled = false;

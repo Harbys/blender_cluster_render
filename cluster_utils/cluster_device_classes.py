@@ -8,8 +8,11 @@ import threading
 import time
 import json
 import shutil
+from os import path
 
 
+# server side definition of a file
+# filename is a path to devices json config file
 class Device:
     def __init__(self, ipaddr, hwid, performance, port, filename):
         self.performance = performance
@@ -21,6 +24,7 @@ class Device:
     def __str__(self):
         return self.hwid
 
+    # saves devices data to json file
     def save(self):
         data = {
             "ip": self.ipaddr,
@@ -31,6 +35,7 @@ class Device:
         with open(f"devices/{self.filename}", "w") as self_datafile:
             json.dump(data, self_datafile, indent=2)
 
+    # returns a sorted list od device performances
     @staticmethod
     def performance_list(devices):
         ret = []
@@ -39,6 +44,7 @@ class Device:
         ret.sort()
         return ret
 
+    # sends information to a device about a job, to then be executed by the device
     def dispatch_job(self, job_id, fstart, fend, file_name, blend_file):
         pass
         data = {
@@ -49,18 +55,21 @@ class Device:
             "blend_file": blend_file
         }
         json_data = json.dumps(data)
-        ret = json.loads(requests.post(f'http://{self.ipaddr}:2540/add_to_work_que', json=json_data).content.decode("utf-8"))
+        ret = json.loads(requests.post(f'http://{self.ipaddr}:{self.port}/add_to_work_que', json=json_data).content.decode("utf-8"))
         if ret["action"] == "job_added":
             return True
         else:
             return False
 
 
+# cluster controller
 class Cluster:
     def __init__(self, config):
+        # devices is a list of devices sorted by their performance
         self.devices = self.sort_devices_by_perf(self.create_devices_list())
         self.queue = work_dispatcher.Que()
         self.file_listener = file_listeners.FileListener(self.queue.add_job, config.listen_path)
+        # config is passed from web dashboard
         self.config = config
         self.que_listener_thread = threading.Thread(target=self.que_listener).start()
 
@@ -82,24 +91,34 @@ class Cluster:
 
     def que_listener(self):
         while True:
+            # goes over every job in queue and checks if it has been previously handled
             for job in self.queue.get_jobs():
                 if job.status == 'waiting':
-                    unzip(self.config.listen_path+job.file_name, self.config.tmp_path+job.job_id)
-                    blend_file_path = f'{self.config.tmp_path+job.job_id}/{self.find_blender_file(self.config.tmp_path+job.job_id)}'
-                    self.dispatch_work(blend_file_path, job.job_id, job.file_name, self.find_blender_file(self.config.tmp_path+job.job_id))
+                    unzip(path.join(self.config.listen_path, job.file_name), path.join(self.config.tmp_path, job.job_id))
+                    # create full path to blender file
+                    blend_file_path = path.join(path.join(self.config.tmp_path, job.job_id), self.find_blender_file(path.join(self.config.tmp_path, job.job_id)))
+                    # send information to every device to pull the data and start rendering
+                    self.dispatch_work(blend_file_path, job.job_id, job.file_name, self.find_blender_file(path.join(self.config.tmp_path, job.job_id)))
+                    # jobs waiting list is set to every device, and change jobs status
                     job.add_to_waitlist(self.devices)
                     job.status = 'pending'
+                    # prints job for debug purposes
                     print(job)
             time.sleep(1)
 
     def dispatch_work(self, blend_file, job_id, file_name, blend_file_name):
+        # gets starting frame number, end frame number and total number of frames
         ftsart, fstop, total = get_frames_info(blend_file)
+        # passes total amount of frames to be split between all devices and gets an array with number of frames to be
+        # rendered by devices
         divided_array = self.divide_alg(total)
         frame = ftsart
         for device in self.devices:
+            # dispatches work with job id, starting frame, ending frame (last sent frame + number from divided array)
             device.dispatch_job(job_id, frame, frame+divided_array[self.devices.index(device)] - 1, file_name, blend_file_name)
             frame += frame+divided_array[self.devices.index(device)] - 1
 
+    # looks for a file with .blend extension
     @staticmethod
     def find_blender_file(path):
         listed = listdir(path)
@@ -108,6 +127,7 @@ class Cluster:
                 return obj
         return None
 
+    # algorithm for dividing work between devices based on their performance numbers
     def divide_alg(self, totalframes):
         perflist = Device.performance_list(self.devices)
         base_divide = []
@@ -126,6 +146,7 @@ class Cluster:
                 nth_loop += 1
         return base_divide
 
+    # gets every .json file in devices folder
     @staticmethod
     def get_device_files():
         read_list = listdir('devices/')
@@ -135,6 +156,7 @@ class Cluster:
                 device_list.append(obj)
         return device_list
 
+    # creates list filled with Device class instances
     def create_devices_list(self):
         name_list = self.get_device_files()
         device_list = []
@@ -144,9 +166,11 @@ class Cluster:
                 device_list.append(Device(jp['ip'], jp['hwid'], jp['performance'], jp['port'], name))
         return device_list
 
+    # deletes id from jobs waiting list and check for completed jobs
     def delete_waiting_for(self, job_id, hwid):
         self.queue.del_from_waiting(job_id, hwid)
         empty = self.queue.get_empty()
+        # delete every temp folder
         for empty_job_id in empty:
             shutil.rmtree(f"{self.config.tmp_path}{empty_job_id}")
 
@@ -159,6 +183,7 @@ class Cluster:
     def edit_device(self, data):
         x = 0
         do = False
+        # edits device with provided data
         for device in self.devices:
             if device.hwid == data["hwid_old"]:
                 do = True

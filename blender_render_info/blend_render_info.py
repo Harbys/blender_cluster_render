@@ -65,6 +65,7 @@ def main():
                 print("%d %d %s" % value)
 
 
+# returns blend files start frame number, end frame number and total amount of frames to be rendered
 def get_frames_info(path):
     fs, fe, scene = read_blend_rend_chunk(path)[0]
     l = fe - (fs-1)

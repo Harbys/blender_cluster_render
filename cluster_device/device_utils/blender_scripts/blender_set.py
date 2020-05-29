@@ -1,3 +1,5 @@
+# script passed to blender to override necessary settings
+
 import bpy
 
 scene = bpy.context.scene
