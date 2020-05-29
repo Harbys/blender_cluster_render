@@ -1,6 +1,6 @@
 {
   "ip": "localhost",
   "hwid": "localhost",
-  "performance": "1",
+  "performance": 2,
   "port": "2540"
 }
