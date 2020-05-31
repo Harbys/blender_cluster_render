@@ -132,6 +132,8 @@ def edit_device():
     except KeyError:
         return "Not authenticated"
 
+    # data needs to be verified here | to be added
+    # note to future, don't just pass data to edit function
     data = flask.request.form
     cluster.edit_device(data)
     return "Success"

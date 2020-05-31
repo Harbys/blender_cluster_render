@@ -1,6 +1,7 @@
 import json
 
 
+# devices config, just returns data from json as properties
 class Config:
     def __init__(self, path="config/config.json"):
         with open(path, 'r') as json_f:
