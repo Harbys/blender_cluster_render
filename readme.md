@@ -20,7 +20,8 @@ This project was developed to run on Linux and MacOS hosts, however there's noth
 
 ## Setup
 
-Setup is divided into two main parts:  
+Setup is divided into two main parts:
+
 [Cluster Controller Setup](#Cluster Controller Setup)  
 [Device Setup](#place-2)
 
