@@ -10,11 +10,11 @@ Cluster controller is expected to export a network folder. Once a zipped .blend 
 
 | Feature       | Compatible?   |
 | ------------- | ------------- |
-| CYCLES        | :heavy_check_mark: |
-| EEVEE         | :x: |
-| GPU RENDER    | :heavy_check_mark: |
-| Image Sequence Render | :heavy_check_mark: |
-| Any Other Format  | :x: |
+| **CYCLES**        | :heavy_check_mark: |
+| **EEVEE**         | :x: |
+| **GPU RENDER**    | :heavy_check_mark: |
+| **Image Sequence Render** | :heavy_check_mark: |
+| **Any Other Format**  | :x: |
 
 This project was developed to run on Linux and MacOS hosts, however there's nothing preventing it from running on Windows platform.
 
