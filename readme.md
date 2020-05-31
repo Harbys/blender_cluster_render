@@ -1,5 +1,7 @@
 # Cluster rendering for blender ![Generic badge](https://img.shields.io/badge/status-PreAlpha-<COLOR>.svg)
 
+:exclamation::exclamation::exclamation:This Project is **NOT PRODUCTION READY***:exclamation::exclamation::exclamation:
+
 Since blender 2.78 there was no avilable cluster rendering option for individuals, that I was aware of. So I decided to write such a solution myself. Right now is more of a proof of concept, rather than a complete product, but hey, it works.
 
 ## How does it work?
