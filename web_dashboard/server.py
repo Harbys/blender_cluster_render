@@ -151,4 +151,4 @@ def dev_api():
 
 
 def run():
-    app.run(host='0.0.0.0', port=2452, threaded=True)
+    app.run(host='0.0.0.0', port=config.port, threaded=True)

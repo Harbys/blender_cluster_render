@@ -1,4 +1,5 @@
 {
   "listen_path" : "/Users/harbys/Desktop/to_render/",
-  "temp_path": "/Users/harbys/Desktop/tmp/"
+  "temp_path": "/Users/harbys/Desktop/tmp/",
+  "port": 2452
 }

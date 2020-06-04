@@ -15,3 +15,7 @@ class Config:
     @property
     def tmp_path(self):
         return self.json_obj["temp_path"]
+
+    @property
+    def port(self):
+        return self.json_obj["port"]
