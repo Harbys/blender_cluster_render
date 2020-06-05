@@ -2,11 +2,17 @@
 
 :exclamation::exclamation::exclamation:This Project is **NOT PRODUCTION READY**:exclamation::exclamation::exclamation:
 
-Since blender 2.78 there was no avilable cluster rendering option for individuals, that I was aware of. So I decided to write such a solution myself. Right now is more of a proof of concept, rather than a complete product, but hey, it works.
+Since blender 2.78 there was no avilable cluster rendering option for individuals, 
+that I was aware of. So I decided to write such a solution myself. Right now is more of a proof of concept, 
+rather than a complete product, but hey, it works.
 
 ## How does it work?
 
-Cluster controller is expected to export a network folder. Once a zipped .blend project gets dropped into it, this file get analyzed and frames to render get split between all configured render devices. Every render device copies the project to it's own memory and than renders assigned frames. Once rendering is done every frame is sent back to the network exported folder. 
+Cluster controller is expected to export a network folder. Once a zipped 
+.blend project gets dropped into it, this file get analyzed and frames to render
+get split between all configured render devices. Every render device copies the project
+to it's own disk space and than renders assigned frames. Once rendering is done every frame 
+is sent back to the network exported folder. 
 
 ## Compatibility
 
@@ -43,4 +49,5 @@ Setup is divided into two main parts:
 ```
 ### Device Setup
 
+## Roadmap
 - [x] dsf

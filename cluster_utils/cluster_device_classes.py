@@ -181,21 +181,15 @@ class Cluster:
         raise KeyError
 
     def edit_device(self, data):
-        x = 0
-        do = False
         # edits device with provided data
-        for device in self.devices:
+        for i, device in enumerate(self.devices):
             if device.hwid == data["hwid_old"]:
-                do = True
+                self.devices[i].hwid = data["hwid"]
+                self.devices[i].ipaddr = data["ip_addr"]
+                self.devices[i].performance = int(data["performance"])
+                self.devices[i].port = data["port"]
+                self.devices[i].save()
+
+                self.devices = self.sort_devices_by_perf(self.devices)
                 break
-            else:
-                x += 1
 
-        if do:
-            self.devices[x].hwid = data["hwid"]
-            self.devices[x].ipaddr = data["ip_addr"]
-            self.devices[x].performance = int(data["performance"])
-            self.devices[x].port = data["port"]
-            self.devices[x].save()
-
-            self.devices = self.sort_devices_by_perf(self.devices)
