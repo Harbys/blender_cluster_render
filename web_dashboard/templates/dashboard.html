@@ -1,19 +1,27 @@
 <!doctype html>
 <head>
+    <!--    <link rel="stylesheet" href="{{ url_for('static',filename='css/uni.css') }}">-->
+    <link rel="stylesheet" href="../static/css/uni.css">
+    <!--    <link rel="stylesheet" href="{{ url_for('static',filename='fonts/hack.css') }}">-->
+    <link rel="stylesheet" href="../static/fonts/hack.css">
     <!--    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css') }}">-->
     <link rel="stylesheet" href="../static/css/dashboard.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
-    <title>BCR Dashboard</title>
+    <title>Dashboard</title>
 </head>
 
 <body>
 <div class="top_bar">
     <a>Dashboard</a>
 </div>
-<div class="dev_container" id="dev_container">
-<!--    JS loads devices into here-->
+<div class="dev_container_container">
+    <a href="/add_device">+Add Device</a>
+    <div class="dev_container" id="dev_container">
+        <!--    JS loads devices into here-->
+    </div>
 </div>
+
 </body>
 
 <!--    <script src={{ url_for('static',filename='js/jquery-3.4.1.min.js') }}></script>-->

@@ -1,22 +1,3 @@
-*{
-    font-family: 'Roboto', sans-serif;
-}
-html, body{
-    margin: 0;
-}
-
-body{
-    background-image: url("../images/bird-s-eye-photography-of-mountain-1624496.jpg");
-    background-repeat: no-repeat;
-    background-size: auto;
-}
-
-.top_bar{
-    background-color: yellow;
-    width: 100%;
-    height: 40px;
-}
-
 .login_box{
     position: fixed;
     top: 50%;

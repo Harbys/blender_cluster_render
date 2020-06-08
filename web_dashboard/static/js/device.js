@@ -10,7 +10,7 @@ document.getElementById("edit_button").addEventListener("click", function () {
     document.getElementById("edit_button").style.display = 'none';
 });
 
-document.getElementById("save_button").addEventListener("click", function () {
+document.getElementById("save_button").addEventListener("click", async function () {
     let data = {
         "hwid_old": device["hwid"],
         "hwid": document.getElementById("hwid").value,
@@ -21,12 +21,21 @@ document.getElementById("save_button").addEventListener("click", function () {
 
     if (data["hwid"] !== device["hwid"] || data["ip_addr"] !== device["ip_addr"] || data["performance"] !== Number(device["performance"]) || data["port"] !== Number(device["port"])){
 
-        $.post("/edit_device", data)
-            .done(function () {
-                if (data["hwid"] !== device.hwid){
-                    document.location.href = `/device/${data["hwid"]}`
-                }
-            });
+        let ret = await $.post("/edit_device", data);
+        if (ret === "Success"){
+            if (data["hwid"] !== device.hwid){
+                document.location.href = `/device/${data["hwid"]}`
+            }
+            device["hwid"] = data["hwid"];
+            device["ip_addr"] = data["ip_addr"];
+            device["performance"] = data["performance"];
+            device["port"] = data["port"];
+
+        }
+        else{
+            window.location.href = window.location.href + "#error";
+        }
+        console.log(ret);
     }
 
     document.getElementById("hwid").disabled = true;

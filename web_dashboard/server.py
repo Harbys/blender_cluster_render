@@ -83,19 +83,32 @@ def dashboard():
 def get_devices():
     try:
         token = flask.request.cookies["sessionid"]
+        if lm.is_logged_in(token):
+            devices = {}
+            for device_elem in cluster.devices:
+                devices[device_elem.hwid] = {
+                    "hwid": device_elem.hwid,
+                    "ip_addr": device_elem.ipaddr,
+                    "port": device_elem.port,
+                    "performance": device_elem.performance
+                }
+            return devices
+        else:
+            return "Not authenticated"
+    except KeyError:
+        return "Not authenticated"
+
+
+@app.route('/add_device')
+def add_device():
+    try:
+        token = flask.request.cookies["sessionid"]
         if not lm.is_logged_in(token):
             return "Not authenticated"
     except KeyError:
         return "Not authenticated"
-    devices = {}
-    for device_elem in cluster.devices:
-        devices[device_elem.hwid] = {
-            "hwid": device_elem.hwid,
-            "ip_addr": device_elem.ipaddr,
-            "port": device_elem.port,
-            "performance": device_elem.performance
-        }
-    return devices
+
+    return flask.render_template('add_device.html')
 
 
 # returns site with device info
@@ -103,23 +116,23 @@ def get_devices():
 def device(device_id):
     try:
         token = flask.request.cookies["sessionid"]
-        if not lm.is_logged_in(token):
+        if lm.is_logged_in(token):
+            try:
+                # pass device to template
+                dev = cluster.find_device_by_hwid(device_id)
+                dev = {
+                    "hwid": dev.hwid,
+                    "ip_addr": dev.ipaddr,
+                    "port": dev.port,
+                    "performance": dev.performance
+                }
+                return flask.render_template("device.html", device=dev)
+            except KeyError:
+                return flask.redirect("/dashboard")
+        else:
             return "Not authenticated"
     except KeyError:
         return "Not authenticated"
-
-    try:
-        # pass device to template
-        dev = cluster.find_device_by_hwid(device_id)
-        dev = {
-            "hwid": dev.hwid,
-            "ip_addr": dev.ipaddr,
-            "port": dev.port,
-            "performance": dev.performance
-        }
-        return flask.render_template("device.html", device=dev)
-    except KeyError:
-        return flask.redirect("/dashboard")
 
 
 # expects form to edit device
@@ -127,16 +140,16 @@ def device(device_id):
 def edit_device():
     try:
         token = flask.request.cookies["sessionid"]
-        if not lm.is_logged_in(token):
+        if lm.is_logged_in(token):
+            # data needs to be verified here | to be added
+            # note to future, don't just pass data to edit function
+            data = flask.request.form
+            cluster.edit_device(data)
+            return "Success"
+        else:
             return "Not authenticated"
     except KeyError:
         return "Not authenticated"
-
-    # data needs to be verified here | to be added
-    # note to future, don't just pass data to edit function
-    data = flask.request.form
-    cluster.edit_device(data)
-    return "Success"
 
 
 # used for communication between cluster devices

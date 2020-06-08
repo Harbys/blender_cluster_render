@@ -1,0 +1,23 @@
+*{
+    font-family: 'Hack', serif;
+}
+html, body{
+    margin: 0;
+}
+
+body{
+    background-image: url("../images/bird-s-eye-photography-of-mountain-1624496.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.top_bar{
+    background-color: yellow;
+    width: 100%;
+    height: 40px;
+}
+
+.top_bar > a{
+    line-height: 40px;
+    margin-left: 10px;
+}
