@@ -50,4 +50,6 @@ Setup is divided into two main parts:
 ### Device Setup
 
 ## Roadmap
-- [x] dsf
+    1. Add EEVEE support
+    2. Make everyhong secure
+    3. Add support for various output formats
