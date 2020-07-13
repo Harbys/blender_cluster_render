@@ -172,7 +172,7 @@ class Cluster:
         empty = self.queue.get_empty()
         # delete every temp folder
         for empty_job_id in empty:
-            shutil.rmtree(f"{self.config.tmp_path}{empty_job_id}")
+            shutil.rmtree(path.join(self.config.tmp_path, empty_job_id))
 
     def find_device_by_hwid(self, hwid):
         for device in self.devices:

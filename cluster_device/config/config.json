@@ -1,9 +1,9 @@
 {
   "port": 2540,
-  "blender_command": "C:\\Program Files\\Blender Foundation\\Blender 2.83\\blender.exe",
+  "blender_command": "blender",
   "hwid": "localhost",
-  "tmp_path": "C:\\Users\\harbys\\Desktop\\tmp",
-  "network_mount": "C:\\Users\\harbys\\Desktop\\torender",
+  "tmp_path": "/tmp",
+  "network_mount": "/mnt/netorkexport",
   "server_address": "localhost",
   "server_port": 2452
 }

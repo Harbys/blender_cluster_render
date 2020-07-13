@@ -87,6 +87,8 @@ Setup is divided into two main parts:
 }
 ```
     5. run cluster_device.py
+
+Note that if you run both cluster controller and device on one system you need to set up 2 separate tmp folders
     
 ## Usage
     1. Mount network exported folder on your workstation

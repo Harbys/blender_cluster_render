@@ -1,5 +1,5 @@
 {
-  "listen_path" : "C:\\Users\\harbys\\Desktop\\torender",
-  "temp_path": "C:\\Users\\harbys\\Desktop\\tmp",
+  "listen_path" : "/exported/folder",
+  "temp_path": "/tmp",
   "port": 2452
 }

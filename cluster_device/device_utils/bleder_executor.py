@@ -42,8 +42,8 @@ class Executor:
                 # prepare the command for blender
                 # note that for now it's prone to exploits
                 command = f"{self.config.blender} -b {os.path.join(self.config.tmp_path, job.job_id, job.blend_file)}" \
-                          f" -P device_utils/blender_scripts/blender_set.py -o {os.path.join(self.config.tmp_path, job.job_id, 'rendered')}" \
-                          f"-s {job.fstart} -e {job.fstop} -a "
+                          f" -P device_utils/blender_scripts/blender_set.py -o {os.path.join(self.config.tmp_path, job.job_id, 'rendered')}/" \
+                          f" -s {job.fstart} -e {job.fstop} -a "
                 print(f"starting render: {command}")
                 # open a temporary output file to dump render info for further processing
                 out = open("tmp/out", 'w+')
