@@ -19,8 +19,8 @@ class FileListener:
         # separate list for files that are not fully copied
         self.still_copying = []
 
-    @staticmethod
-    def is_growing(file):
+    def is_growing(self, file):
+        file = os.path.join(self.listenpath, file)
         init_size = os.path.getsize(file)
         time.sleep(1)
         if init_size == os.path.getsize(file):

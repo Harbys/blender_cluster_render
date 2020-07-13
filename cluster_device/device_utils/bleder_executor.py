@@ -42,7 +42,7 @@ class Executor:
                 # prepare the command for blender
                 # note that for now it's prone to exploits
                 command = f"{self.config.blender} -b {os.path.join(self.config.tmp_path, job.job_id, job.blend_file)}" \
-                          f" -P device_utils/blender_scripts/blender_set.py -o {os.path.join(self.config.tmp_path, job.job_id, '/rendered/')}" \
+                          f" -P device_utils/blender_scripts/blender_set.py -o {os.path.join(self.config.tmp_path, job.job_id, 'rendered')}" \
                           f"-s {job.fstart} -e {job.fstop} -a "
                 print(f"starting render: {command}")
                 # open a temporary output file to dump render info for further processing
@@ -51,13 +51,13 @@ class Executor:
                 blender_render = subprocess.Popen(command, shell=True, stdout=out)
                 blender_render.wait()
                 # get all rendered frames from temp
-                rendered_files = os.listdir(os.path.join(self.config.tmp_path, job.job_id, "/rendered/"))
+                rendered_files = os.listdir(os.path.join(self.config.tmp_path, job.job_id, "rendered"))
                 # make a directory 'rendered' on network share if doesn't exist
                 if not os.path.isdir(os.path.join(self.config.nmnt, job.file_name[:-4])):
                     os.mkdir(os.path.join(self.config.nmnt, job.file_name[:-4]))
                 # copy every rendered frame to network mount
                 for file in rendered_files:
-                    shutil.copy(os.path.join(self.config.tmp_path, job.job_id, "/rendered/", file),
+                    shutil.copy(os.path.join(self.config.tmp_path, job.job_id, "rendered", file),
                                 os.path.join(self.config.nmnt, job.file_name[:-4], file))
                 # cleanup after the job
                 self.cleanup(job.job_id)

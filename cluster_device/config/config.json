@@ -1,9 +1,9 @@
 {
   "port": 2540,
-  "blender_command": "/Applications/Blender.app/Contents/MacOS/Blender",
+  "blender_command": "C:\\Program Files\\Blender Foundation\\Blender 2.83\\blender.exe",
   "hwid": "localhost",
-  "tmp_path": "/Users/harbys/Desktop/bcr/",
-  "network_mount": "/Users/harbys/Desktop/to_render/",
+  "tmp_path": "C:\\Users\\harbys\\Desktop\\tmp",
+  "network_mount": "C:\\Users\\harbys\\Desktop\\torender",
   "server_address": "localhost",
   "server_port": 2452
 }
